@@ -1,0 +1,33 @@
+name: fantasyfootball-apilayer
+services:
+  mongo-apibe:
+    container_name: mongo-apibe
+    image: mongo:latest
+    volumes:
+      - mongo-vol-db:/data/db
+      - mongo-vol-dbconfig:/data/configdb
+    ports:
+      - "26019:27017"
+  flask-apimw:
+    container_name: flask-apimw
+    image: elvira/fantasyfootball-mwlayer:v0.1
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - FF_PYENV=DEV
+      - MongoEnv=${MongoEnv}
+      - MongoHost=${MongoHost}
+      - MongoPort=${MongoPort}
+      - MongoUsername=${MongoUsername}
+      - MongoPassword=${MongoPassword}
+      - AuthSecret=${AuthSecret}
+      - JwtSecret=${JwtSecret}
+
+volumes:
+  mongo-vol-db:
+    external: true
+    name: mongo-vol-db
+  mongo-vol-dbconfig:
+    external: true
+    name: mongo-vol-dbconfig
